@@ -2,6 +2,8 @@ package br.edu.unoesc.gestao_documentos.controller;
 
 import br.edu.unoesc.gestao_documentos.service.SolicitacaoService;
 import br.edu.unoesc.gestao_documentos.domain.Solicitacao;
+import br.edu.unoesc.gestao_documentos.dto.AlterarStatusDto;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -20,5 +22,14 @@ public class SolicitacaoController {
     public ResponseEntity<Solicitacao> criar(@RequestBody Solicitacao solicitacao) {
         Solicitacao novaSolicitacao = solicitacaoService.criarSolicitacao(solicitacao);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
+    }
+
+    @PatchMapping
+    public ResponseEntity<Solicitacao> alterarStatus(
+            @PathVariable Integer id,
+            @RequestBody AlterarStatusDto dto) {
+        Solicitacao solicitacaoAtualizada = solicitacaoService.alterarStatus(id, dto.statusId(), dto.responsavel());
+
+        return ResponseEntity.ok(solicitacaoAtualizada);
     }
 }
