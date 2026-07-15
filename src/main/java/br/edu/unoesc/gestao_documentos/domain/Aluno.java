@@ -1,23 +1,16 @@
 package br.edu.unoesc.gestao_documentos.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "aluno")
+@EntityListeners(AuditoriaListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,6 +28,9 @@ public class Aluno {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    // @JsonIgnore evita recursao infinita Aluno -> Solicitacao -> Aluno na
+    // serializacao
+    @JsonIgnore
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Solicitacao> solicitacoes = new HashSet<>();
 }

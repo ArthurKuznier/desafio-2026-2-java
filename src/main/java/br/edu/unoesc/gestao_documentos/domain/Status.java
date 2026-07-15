@@ -1,19 +1,12 @@
 package br.edu.unoesc.gestao_documentos.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table
+@Table(name = "status")
+@EntityListeners(AuditoriaListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,9 +18,17 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * Deve corresponder a um valor de StatusNome (ABERTA, EM_ANALISE, APROVADA,
+     * REPROVADA, EMITIDA)
+     */
     @Column(nullable = false, length = 150)
     private String nome;
 
+    /**
+     * Codigo do responsavel pela etapa - deve bater com Usuario.codigoResponsavel
+     * no RF03
+     */
     @Column(nullable = false)
     private int responsavel;
 

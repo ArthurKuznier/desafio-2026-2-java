@@ -1,19 +1,12 @@
 package br.edu.unoesc.gestao_documentos.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Table
+@Table(name = "tipo_documento")
+@EntityListeners(AuditoriaListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
