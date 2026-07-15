@@ -25,7 +25,7 @@ public class SolicitacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     public ResponseEntity<Solicitacao> alterarStatus(
             @PathVariable Integer id,
             @RequestBody AlterarStatusDto dto) {

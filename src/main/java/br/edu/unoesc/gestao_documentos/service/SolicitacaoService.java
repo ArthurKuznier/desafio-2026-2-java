@@ -47,7 +47,7 @@ public class SolicitacaoService {
     }
 
     private boolean validarTransicao(String atual, String novo) {
-        if (atual.equals("ABERTA") && novo.equals("EM ANALISE"))
+        if (atual.equals("ABERTA") && novo.equals("EM_ANALISE"))
             return true;
         if (atual.equals("EM_ANALISE") && novo.equals("REPROVADA"))
             return true;
