@@ -6,6 +6,8 @@ import br.edu.unoesc.gestao_documentos.repositories.SolicitacaoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.StatusRepository;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class SolicitacaoService {
@@ -45,15 +47,19 @@ public class SolicitacaoService {
     }
 
     private boolean validarTransicao(String atual, String novo) {
-        if (atual.equals("ABERTA") && !novo.equals("EM ANALISE"))
+        if (atual.equals("ABERTA") && novo.equals("EM ANALISE"))
             return true;
-        if (atual.equals("EM_ANALISE") && !novo.equals("REPROVADA"))
+        if (atual.equals("EM_ANALISE") && novo.equals("REPROVADA"))
             return true;
         if (atual.equals("EM_ANALISE") && novo.equals("APROVADA"))
             return true;
-        if (atual.equals("APROVADA") && !novo.equals("EMITIDA"))
+        if (atual.equals("APROVADA") && novo.equals("EMITIDA"))
             return true;
 
         return false;
+    }
+
+    public Page<Solicitacao> buscarSolicitacoes(String nomeAluno, Integer cursoId, Pageable pageable) {
+        return solicitacaoRepository.buscarComFiltros(nomeAluno, cursoId, pageable);
     }
 }
