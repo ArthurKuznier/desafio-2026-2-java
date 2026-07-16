@@ -27,12 +27,10 @@ public class Auditoria {
     @Column(nullable = false, length = 20)
     private TipoOperacao operacao;
 
-    @Lob
-    @Column(name = "estado_anterior")
+    @Column(name = "estado_anterior", columnDefinition = "TEXT")
     private String estadoAnterior;
 
-    @Lob
-    @Column(name = "estado_novo")
+    @Column(name = "estado_novo", columnDefinition = "TEXT")
     private String estadoNovo;
 
     @Column(nullable = false, length = 150)

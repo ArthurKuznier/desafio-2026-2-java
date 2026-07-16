@@ -4,6 +4,8 @@ import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
 @Table(name = "tipo_documento")
 @EntityListeners(AuditoriaListener.class)
@@ -18,6 +20,7 @@ public class TipoDocumento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "O nome do tipo de documento é obrigatório")
     @Column(nullable = false, length = 150)
     private String nome;
 }

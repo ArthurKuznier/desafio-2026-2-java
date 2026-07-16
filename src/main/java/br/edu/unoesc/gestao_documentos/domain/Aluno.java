@@ -8,6 +8,8 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
 @Table(name = "aluno")
 @EntityListeners(AuditoriaListener.class)
@@ -22,14 +24,13 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "O nome do aluno é obrigatório")
     @Column(nullable = false, length = 150)
     private String nome;
 
     @Column(nullable = false)
     private boolean ativo = true;
 
-    // @JsonIgnore evita recursao infinita Aluno -> Solicitacao -> Aluno na
-    // serializacao
     @JsonIgnore
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Solicitacao> solicitacoes = new HashSet<>();

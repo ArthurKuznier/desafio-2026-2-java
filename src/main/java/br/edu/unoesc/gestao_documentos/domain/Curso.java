@@ -8,6 +8,8 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
 @Table(name = "curso")
 @EntityListeners(AuditoriaListener.class)
@@ -22,6 +24,7 @@ public class Curso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "O nome do curso é obrigatório")
     @Column(nullable = false, length = 150)
     private String nome;
 

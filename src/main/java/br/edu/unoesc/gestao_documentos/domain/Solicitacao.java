@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotNull;
+
 @Entity
 @Table(name = "solicitacao")
 @EntityListeners(AuditoriaListener.class)
@@ -20,14 +22,17 @@ public class Solicitacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotNull(message = "O aluno é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aluno_id", nullable = false)
     private Aluno aluno;
 
+    @NotNull(message = "O curso é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
 
+    @NotNull(message = "O tipo de documento é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_documento_id", nullable = false)
     private TipoDocumento tipo;
@@ -38,16 +43,13 @@ public class Solicitacao {
     @Column(nullable = false)
     private LocalDateTime dataAlteracao;
 
-    /**
-     * Preenchida quando o status atual tem finalizaSolicitacao = true (ex.:
-     * EMITIDA)
-     */
     private LocalDateTime dataEmissao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
 
+    @NotNull(message = "A prioridade é obrigatória")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Prioridade prioridade;

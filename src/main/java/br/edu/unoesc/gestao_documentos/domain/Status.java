@@ -4,6 +4,9 @@ import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 @Entity
 @Table(name = "status")
 @EntityListeners(AuditoriaListener.class)
@@ -18,19 +21,13 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * Deve corresponder a um valor de StatusNome (ABERTA, EM_ANALISE, APROVADA,
-     * REPROVADA, EMITIDA)
-     */
+    @NotBlank(message = "O nome do status é obrigatório")
     @Column(nullable = false, length = 150)
     private String nome;
 
-    /**
-     * Codigo do responsavel pela etapa - deve bater com Usuario.codigoResponsavel
-     * no RF03
-     */
+    @NotNull(message = "O código do responsável é obrigatório")
     @Column(nullable = false)
-    private int responsavel;
+    private Integer responsavel;
 
     @Column(nullable = false)
     private boolean finalizaSolicitacao;
