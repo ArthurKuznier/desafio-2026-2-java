@@ -2,15 +2,31 @@ package br.edu.unoesc.gestao_documentos.service;
 
 import br.edu.unoesc.gestao_documentos.domain.Solicitacao;
 import br.edu.unoesc.gestao_documentos.domain.Status;
+import br.edu.unoesc.gestao_documentos.domain.StatusNome;
+import br.edu.unoesc.gestao_documentos.exception.RegraNegocioException;
 import br.edu.unoesc.gestao_documentos.repositories.SolicitacaoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.StatusRepository;
-import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class SolicitacaoService {
+
+    private static final Map<StatusNome, Set<StatusNome>> TRANSICOES_VALIDAS = new EnumMap<>(StatusNome.class);
+    static {
+        TRANSICOES_VALIDAS.put(StatusNome.ABERTA, EnumSet.of(StatusNome.EM_ANALISE));
+        TRANSICOES_VALIDAS.put(StatusNome.EM_ANALISE, EnumSet.of(StatusNome.APROVADA, StatusNome.REPROVADA));
+        TRANSICOES_VALIDAS.put(StatusNome.APROVADA, EnumSet.of(StatusNome.EMITIDA));
+    }
+
     private final SolicitacaoRepository solicitacaoRepository;
     private final StatusRepository statusRepository;
 
@@ -19,9 +35,14 @@ public class SolicitacaoService {
         this.statusRepository = statusRepository;
     }
 
-    // Insert pelo JPA
     public Solicitacao criarSolicitacao(Solicitacao solicitacao) {
-        return this.solicitacaoRepository.save(solicitacao);
+        LocalDateTime agora = LocalDateTime.now();
+        solicitacao.setDataSolicitacao(agora);
+        solicitacao.setDataAlteracao(agora);
+        if (solicitacao.getStatus() == null) {
+            solicitacao.setStatus(buscarOuCriarStatusAberta());
+        }
+        return solicitacaoRepository.save(solicitacao);
     }
 
     public Solicitacao alterarStatus(Integer solicitacaoId, Integer novoStatusId, Integer responsavelInformado) {
@@ -31,35 +52,49 @@ public class SolicitacaoService {
         Status novoStatus = statusRepository.findById(novoStatusId)
                 .orElseThrow(() -> new EntityNotFoundException("Status não encontrado"));
 
-        if (novoStatus.getResponsavel() != responsavelInformado) {
-            throw new RuntimeException("Responsavel Invalido");
+        if (novoStatus.getResponsavel() == null || !novoStatus.getResponsavel().equals(responsavelInformado)) {
+            throw new RegraNegocioException("Responsavel Invalido");
         }
 
-        String statusAtualNome = solicitacao.getStatus().getNome().toUpperCase();
-        String novoStatusNome = novoStatus.getNome().toUpperCase();
+        StatusNome statusAtual = statusNomeDe(solicitacao.getStatus());
+        StatusNome statusNovo = statusNomeDe(novoStatus);
 
-        if (!validarTransicao(statusAtualNome, novoStatusNome)) {
-            throw new RuntimeException("Transição inválida de " + statusAtualNome + " para " + novoStatusNome);
+        if (!transicaoPermitida(statusAtual, statusNovo)) {
+            throw new RegraNegocioException(
+                    "Transição inválida de " + statusAtual + " para " + statusNovo);
         }
 
         solicitacao.setStatus(novoStatus);
+        solicitacao.setDataAlteracao(LocalDateTime.now());
+        solicitacao.setDataEmissao(novoStatus.isFinalizaSolicitacao() ? LocalDateTime.now() : null);
+
         return solicitacaoRepository.save(solicitacao);
-    }
-
-    private boolean validarTransicao(String atual, String novo) {
-        if (atual.equals("ABERTA") && novo.equals("EM_ANALISE"))
-            return true;
-        if (atual.equals("EM_ANALISE") && novo.equals("REPROVADA"))
-            return true;
-        if (atual.equals("EM_ANALISE") && novo.equals("APROVADA"))
-            return true;
-        if (atual.equals("APROVADA") && novo.equals("EMITIDA"))
-            return true;
-
-        return false;
     }
 
     public Page<Solicitacao> buscarSolicitacoes(String nomeAluno, Integer cursoId, Pageable pageable) {
         return solicitacaoRepository.buscarComFiltros(nomeAluno, cursoId, pageable);
+    }
+
+    private Status buscarOuCriarStatusAberta() {
+        return statusRepository.findByNomeIgnoreCase(StatusNome.ABERTA.name())
+                .orElseGet(() -> {
+                    Status status = new Status();
+                    status.setNome(StatusNome.ABERTA.name());
+                    status.setResponsavel(1);
+                    status.setFinalizaSolicitacao(false);
+                    return statusRepository.save(status);
+                });
+    }
+
+    private boolean transicaoPermitida(StatusNome atual, StatusNome novo) {
+        return TRANSICOES_VALIDAS.getOrDefault(atual, EnumSet.noneOf(StatusNome.class)).contains(novo);
+    }
+
+    private StatusNome statusNomeDe(Status status) {
+        StatusNome nome = StatusNome.normalizar(status.getNome());
+        if (nome == null) {
+            throw new RegraNegocioException("Status desconhecido: " + status.getNome());
+        }
+        return nome;
     }
 }
