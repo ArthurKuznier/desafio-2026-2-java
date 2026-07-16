@@ -1,19 +1,13 @@
 package br.edu.unoesc.gestao_documentos.service;
 
+import br.edu.unoesc.gestao_documentos.domain.Aluno;
+import br.edu.unoesc.gestao_documentos.repositories.AlunoRepository;
 import org.springframework.stereotype.Service;
 
-import br.edu.unoesc.gestao_documentos.repositories.AlunoRepository;
-import br.edu.unoesc.gestao_documentos.domain.Aluno;
-
 @Service
-public class AlunoService {
-    private final AlunoRepository alunoRepository;
+public class AlunoService extends AbstractCrudService<Aluno, Integer> {
 
     public AlunoService(AlunoRepository alunoRepository) {
-        this.alunoRepository = alunoRepository;
-    }
-
-    public Aluno salvar(Aluno aluno) {
-        return this.alunoRepository.save(aluno);
+        super(alunoRepository);
     }
 }

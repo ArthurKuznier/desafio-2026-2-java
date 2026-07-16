@@ -1,19 +1,14 @@
 package br.edu.unoesc.gestao_documentos.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import br.edu.unoesc.gestao_documentos.audit.AuditoriaListener;
+import jakarta.persistence.*;
+import lombok.*;
+
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table
+@Table(name = "tipo_documento")
+@EntityListeners(AuditoriaListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +20,7 @@ public class TipoDocumento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "O nome do tipo de documento é obrigatório")
     @Column(nullable = false, length = 150)
     private String nome;
 }
