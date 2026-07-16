@@ -4,6 +4,8 @@ import br.edu.unoesc.gestao_documentos.domain.Usuario;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.Date;
 
 @Service
 public class TokenService {
+
+    private static final Logger log = LoggerFactory.getLogger(TokenService.class);
 
     @Value("${app.security.jwt.secret}")
     private String secret;
@@ -37,6 +41,7 @@ public class TokenService {
                     .getPayload()
                     .getSubject();
         } catch (Exception exception) {
+            log.warn("Falha ao validar token JWT: {}", exception.getMessage());
             return "";
         }
     }
