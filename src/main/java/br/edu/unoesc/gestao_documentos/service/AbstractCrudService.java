@@ -1,5 +1,7 @@
 package br.edu.unoesc.gestao_documentos.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public abstract class AbstractCrudService<T, ID> {
@@ -12,5 +14,9 @@ public abstract class AbstractCrudService<T, ID> {
 
     public T salvar(T entidade) {
         return repository.save(entidade);
+    }
+
+    public Page<T> listar(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }
