@@ -1,9 +1,11 @@
 package br.edu.unoesc.gestao_documentos.service;
 
+import br.edu.unoesc.gestao_documentos.domain.Aluno;
 import br.edu.unoesc.gestao_documentos.domain.Solicitacao;
 import br.edu.unoesc.gestao_documentos.domain.Status;
 import br.edu.unoesc.gestao_documentos.domain.StatusNome;
 import br.edu.unoesc.gestao_documentos.exception.RegraNegocioException;
+import br.edu.unoesc.gestao_documentos.repositories.AlunoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.SolicitacaoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.StatusRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,13 +31,19 @@ public class SolicitacaoService {
 
     private final SolicitacaoRepository solicitacaoRepository;
     private final StatusRepository statusRepository;
+    private final AlunoRepository alunoRepository;
 
-    public SolicitacaoService(SolicitacaoRepository solicitacaoRepository, StatusRepository statusRepository) {
+    public SolicitacaoService(SolicitacaoRepository solicitacaoRepository, StatusRepository statusRepository,
+            AlunoRepository alunoRepository) {
         this.solicitacaoRepository = solicitacaoRepository;
         this.statusRepository = statusRepository;
+        this.alunoRepository = alunoRepository;
     }
 
     public Solicitacao criarSolicitacao(Solicitacao solicitacao) {
+        Aluno aluno = buscarAlunoAtivo(solicitacao);
+        solicitacao.setAluno(aluno);
+
         LocalDateTime agora = LocalDateTime.now();
         solicitacao.setDataSolicitacao(agora);
         solicitacao.setDataAlteracao(agora);
@@ -43,6 +51,22 @@ public class SolicitacaoService {
             solicitacao.setStatus(buscarOuCriarStatusAberta());
         }
         return solicitacaoRepository.save(solicitacao);
+    }
+
+    private Aluno buscarAlunoAtivo(Solicitacao solicitacao) {
+        if (solicitacao.getAluno() == null || solicitacao.getAluno().getId() == null) {
+            throw new RegraNegocioException("O id do aluno e obrigatorio");
+        }
+
+        Aluno aluno = alunoRepository.findById(solicitacao.getAluno().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Aluno nao encontrado"));
+
+        if (!aluno.isAtivo()) {
+            throw new RegraNegocioException(
+                    "Aluno de id " + aluno.getId() + " esta inativo e nao pode abrir novas solicitacoes");
+        }
+
+        return aluno;
     }
 
     public Solicitacao alterarStatus(Integer solicitacaoId, Integer novoStatusId, Integer responsavelInformado) {
