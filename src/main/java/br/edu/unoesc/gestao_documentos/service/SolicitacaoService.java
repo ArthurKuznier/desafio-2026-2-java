@@ -8,6 +8,10 @@ import br.edu.unoesc.gestao_documentos.exception.RegraNegocioException;
 import br.edu.unoesc.gestao_documentos.repositories.AlunoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.SolicitacaoRepository;
 import br.edu.unoesc.gestao_documentos.repositories.StatusRepository;
+import br.edu.unoesc.gestao_documentos.repositories.projection.DocumentoCountProjection;
+import br.edu.unoesc.gestao_documentos.repositories.projection.PeriodoCountProjection;
+import br.edu.unoesc.gestao_documentos.repositories.projection.StatusCountProjection;
+import br.edu.unoesc.gestao_documentos.repositories.projection.TempoMedioEmissaoProjection;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,8 +100,35 @@ public class SolicitacaoService {
         return solicitacaoRepository.save(solicitacao);
     }
 
-    public Page<Solicitacao> buscarSolicitacoes(String nomeAluno, Integer cursoId, Pageable pageable) {
-        return solicitacaoRepository.buscarComFiltros(nomeAluno, cursoId, pageable);
+    public Page<Solicitacao> buscarSolicitacoes(String nomeAluno, String nomeCurso, String nomeTipoDocumento,
+            Integer statusId, LocalDateTime dataInicio, LocalDateTime dataFim, Pageable pageable) {
+        return solicitacaoRepository.buscarComFiltros(nomeAluno, nomeCurso, nomeTipoDocumento, statusId, dataInicio,
+                dataFim, pageable);
+    }
+
+    // RF02 - "Solicitacoes realizadas por um Aluno"
+    public Page<Solicitacao> buscarPorAluno(Integer alunoId, Pageable pageable) {
+        return solicitacaoRepository.findByAlunoId(alunoId, pageable);
+    }
+
+    // RF02/RF06 - Quantidade de solicitacoes por Status
+    public List<StatusCountProjection> estatisticasPorStatus() {
+        return solicitacaoRepository.contarPorStatus();
+    }
+
+    // RF02/RF06 - Quantidade de solicitacoes por periodo
+    public List<PeriodoCountProjection> estatisticasPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) {
+        return solicitacaoRepository.contarPorPeriodo(dataInicio, dataFim);
+    }
+
+    // RF02/RF06 - Documentos mais solicitados
+    public List<DocumentoCountProjection> documentosMaisSolicitados() {
+        return solicitacaoRepository.documentosMaisSolicitados();
+    }
+
+    // RF02/RF06 - Media de tempo ate emissao
+    public TempoMedioEmissaoProjection tempoMedioEmissao() {
+        return solicitacaoRepository.calcularTempoMedioEmissao();
     }
 
     private Status buscarOuCriarStatusAberta() {
