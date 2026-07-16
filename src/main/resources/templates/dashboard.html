@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Gestao de Documentos Academicos</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Tela de login: e' o que aparece primeiro, ate' logar -->
+    <section id="loginSection" class="login-wrapper">
+        <form id="formLogin" class="login-card">
+            <h1>Gestao de Documentos Academicos</h1>
+            <p class="subtitulo">Entre com seu usuario para ver o dashboard</p>
+
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required autocomplete="current-password">
+
+            <button type="submit">Entrar</button>
+            <p id="loginErro" class="erro"></p>
+        </form>
+    </section>
+
+    <!-- Dashboard: comeca escondido, so aparece depois do login -->
+    <div id="dashboardSection" class="escondido">
+        <header class="topbar">
+            <h1>Gestao de Documentos Academicos</h1>
+            <div class="token-box">
+                <span id="usuarioLogado"></span>
+                <button id="btnSair">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="cards">
+                <div class="card">
+                    <span class="card-label">Total de solicitacoes</span>
+                    <span class="card-value" id="totalSolicitacoes">--</span>
+                </div>
+                <div class="card">
+                    <span class="card-label">Solicitacoes emitidas</span>
+                    <span class="card-value" id="totalEmitidas">--</span>
+                </div>
+                <div class="card">
+                    <span class="card-label">Tempo medio ate emissao</span>
+                    <span class="card-value" id="tempoMedio">--</span>
+                </div>
+            </section>
+
+            <section class="grid">
+                <div class="painel">
+                    <h2>Solicitacoes por status</h2>
+                    <canvas id="graficoStatus"></canvas>
+                </div>
+                <div class="painel">
+                    <h2>Solicitacoes por periodo</h2>
+                    <canvas id="graficoPeriodo"></canvas>
+                </div>
+                <div class="painel">
+                    <h2>Documentos mais solicitados</h2>
+                    <table id="tabelaDocumentos">
+                        <thead>
+                            <tr>
+                                <th>Tipo de documento</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <p id="mensagemErro" class="erro"></p>
+        </main>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+</body>
+
+</html>

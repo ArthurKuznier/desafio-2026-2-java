@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -45,6 +46,16 @@ public class GlobalExceptionHandler {
                 "Erro de Validação de Campos",
                 mensagem);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErroResponseDto> handleAutenticacao(AuthenticationException ex) {
+        log.warn("Falha de autenticação: {}", ex.getMessage());
+        ErroResponseDto erro = new ErroResponseDto(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Não Autorizado",
+                "Usuário ou senha inválidos");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
     }
 
     @ExceptionHandler(Exception.class)

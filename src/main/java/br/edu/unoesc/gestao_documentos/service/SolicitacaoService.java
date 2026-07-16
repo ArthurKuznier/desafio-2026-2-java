@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.EnumMap;
@@ -45,6 +46,7 @@ public class SolicitacaoService {
         this.alunoRepository = alunoRepository;
     }
 
+    @Transactional
     public Solicitacao criarSolicitacao(Solicitacao solicitacao) {
         Aluno aluno = buscarAlunoAtivo(solicitacao);
         solicitacao.setAluno(aluno);
@@ -74,8 +76,9 @@ public class SolicitacaoService {
         return aluno;
     }
 
+    @Transactional
     public Solicitacao alterarStatus(Integer solicitacaoId, Integer novoStatusId, Integer responsavelInformado) {
-        Solicitacao solicitacao = solicitacaoRepository.findById(solicitacaoId)
+        Solicitacao solicitacao = solicitacaoRepository.buscarCompletoPorId(solicitacaoId)
                 .orElseThrow(() -> new EntityNotFoundException("Solicitação não encontrada"));
 
         Status novoStatus = statusRepository.findById(novoStatusId)
@@ -95,7 +98,7 @@ public class SolicitacaoService {
 
         solicitacao.setStatus(novoStatus);
         solicitacao.setDataAlteracao(LocalDateTime.now());
-        solicitacao.setDataEmissao(novoStatus.isFinalizaSolicitacao() ? LocalDateTime.now() : null);
+        solicitacao.setDataEmissao(statusNovo == StatusNome.EMITIDA ? LocalDateTime.now() : null);
 
         return solicitacaoRepository.save(solicitacao);
     }
