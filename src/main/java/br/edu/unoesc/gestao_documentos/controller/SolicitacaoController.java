@@ -1,13 +1,21 @@
 package br.edu.unoesc.gestao_documentos.controller;
 
-import br.edu.unoesc.gestao_documentos.service.SolicitacaoService;
 import br.edu.unoesc.gestao_documentos.domain.Solicitacao;
 import br.edu.unoesc.gestao_documentos.dto.AlterarStatusDto;
+import br.edu.unoesc.gestao_documentos.service.SolicitacaoService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/solicitacoes")
@@ -20,7 +28,7 @@ public class SolicitacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Solicitacao> criar(@RequestBody Solicitacao solicitacao) {
+    public ResponseEntity<Solicitacao> criar(@RequestBody @Valid Solicitacao solicitacao) {
         Solicitacao novaSolicitacao = solicitacaoService.criarSolicitacao(solicitacao);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
     }
@@ -28,9 +36,8 @@ public class SolicitacaoController {
     @PatchMapping("/{id}")
     public ResponseEntity<Solicitacao> alterarStatus(
             @PathVariable Integer id,
-            @RequestBody AlterarStatusDto dto) {
+            @RequestBody @Valid AlterarStatusDto dto) {
         Solicitacao solicitacaoAtualizada = solicitacaoService.alterarStatus(id, dto.statusId(), dto.responsavel());
-
         return ResponseEntity.ok(solicitacaoAtualizada);
     }
 
