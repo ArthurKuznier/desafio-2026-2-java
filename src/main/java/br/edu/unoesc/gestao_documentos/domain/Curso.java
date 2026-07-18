@@ -29,6 +29,6 @@ public class Curso {
     private String nome;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "curso")
     private Set<Solicitacao> solicitacoes = new HashSet<>();
 }
