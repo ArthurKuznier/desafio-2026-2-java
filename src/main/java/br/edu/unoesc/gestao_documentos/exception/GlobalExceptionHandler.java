@@ -4,6 +4,7 @@ import br.edu.unoesc.gestao_documentos.dto.ErroResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -56,6 +57,16 @@ public class GlobalExceptionHandler {
                 "Não Autorizado",
                 "Usuário ou senha inválidos");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErroResponseDto> handleIntegridade(DataIntegrityViolationException ex) {
+        log.warn("Violação de integridade: {}", ex.getMessage());
+        ErroResponseDto erro = new ErroResponseDto(
+                HttpStatus.CONFLICT.value(),
+                "Conflito de Integridade",
+                "Não é possível concluir a operação: existem registros vinculados a este recurso");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(erro);
     }
 
     @ExceptionHandler(Exception.class)
