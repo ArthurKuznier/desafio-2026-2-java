@@ -32,6 +32,6 @@ public class Aluno {
     private boolean ativo = true;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "aluno")
     private Set<Solicitacao> solicitacoes = new HashSet<>();
 }

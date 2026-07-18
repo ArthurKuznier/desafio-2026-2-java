@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +35,17 @@ public class CursoController {
     @GetMapping
     public ResponseEntity<Page<Curso>> listar(Pageable pageable) {
         return ResponseEntity.ok(cursoService.listar(pageable));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Curso> atualizar(@PathVariable Integer id, @RequestBody @Valid Curso curso) {
+        curso.setId(id);
+        return ResponseEntity.ok(cursoService.atualizar(id, curso));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Integer id) {
+        cursoService.remover(id);
+        return ResponseEntity.noContent().build();
     }
 }
