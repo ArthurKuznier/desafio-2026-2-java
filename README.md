@@ -82,6 +82,7 @@ ou `/solicitacoes`) para obter o token JWT.
   documentos mais solicitados, tempo médio até emissão).
 - **`/solicitacoes`** — criar novas solicitações e avançar o status delas
   pelo fluxo de aprovação, direto pela interface.
+- **`/cadastros`** — criar, listar e remover Alunos, Cursos e Tipos de Documento (RF01.1).
 
 ## Documentação da API (Swagger)
 
