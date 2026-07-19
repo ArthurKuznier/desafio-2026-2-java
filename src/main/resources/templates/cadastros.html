@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastros - Gestao de Documentos Academicos</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/solicitacoes.css}">
+    <link rel="stylesheet" th:href="@{/css/cadastros.css}">
+</head>
+
+<body>
+
+    <!-- Tela de login: identica as demais paginas -->
+    <section id="loginSection" class="login-wrapper">
+        <form id="formLogin" class="login-card">
+            <h1>Gestao de Documentos Academicos</h1>
+            <p class="subtitulo">Entre com seu usuario para continuar</p>
+
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required autocomplete="current-password">
+
+            <button type="submit">Entrar</button>
+            <p id="loginErro" class="erro"></p>
+        </form>
+    </section>
+
+    <!-- Tela principal -->
+    <div id="painelSection" class="escondido">
+        <header class="topbar">
+            <h1>Cadastros</h1>
+            <nav class="nav-links">
+                <a th:href="@{/dashboard}">Dashboard</a>
+                <a th:href="@{/solicitacoes}">Solicitacoes</a>
+                <a th:href="@{/cadastros}" class="ativo">Cadastros</a>
+            </nav>
+            <div class="token-box">
+                <span id="usuarioLogado"></span>
+                <button id="btnSair">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <p id="mensagemErro" class="erro"></p>
+
+            <div class="colunas-cadastro">
+                <section class="painel">
+                    <h2>Alunos</h2>
+                    <form id="formAluno" class="form-inline form-inline-coluna">
+                        <div class="campo campo-largo">
+                            <label for="nomeAluno">Nome</label>
+                            <input type="text" id="nomeAluno" required>
+                        </div>
+                        <div class="campo campo-botao">
+                            <button type="submit">Adicionar</button>
+                        </div>
+                    </form>
+                    <p id="alunoErro" class="erro"></p>
+                    <table id="tabelaAlunos">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </section>
+
+                <section class="painel">
+                    <h2>Cursos</h2>
+                    <form id="formCurso" class="form-inline form-inline-coluna">
+                        <div class="campo campo-largo">
+                            <label for="nomeCurso">Nome</label>
+                            <input type="text" id="nomeCurso" required>
+                        </div>
+                        <div class="campo campo-botao">
+                            <button type="submit">Adicionar</button>
+                        </div>
+                    </form>
+                    <p id="cursoErro" class="erro"></p>
+                    <table id="tabelaCursos">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </section>
+
+                <section class="painel">
+                    <h2>Tipos de documento</h2>
+                    <form id="formTipo" class="form-inline form-inline-coluna">
+                        <div class="campo campo-largo">
+                            <label for="nomeTipo">Nome</label>
+                            <input type="text" id="nomeTipo" required>
+                        </div>
+                        <div class="campo campo-botao">
+                            <button type="submit">Adicionar</button>
+                        </div>
+                    </form>
+                    <p id="tipoErro" class="erro"></p>
+                    <table id="tabelaTipos">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/cadastros.js}"></script>
+</body>
+
+</html>

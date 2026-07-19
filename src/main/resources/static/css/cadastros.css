@@ -1,0 +1,77 @@
+.colunas-cadastro {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.form-inline-coluna {
+    flex-wrap: wrap;
+}
+
+.campo-largo {
+    width: 100%;
+}
+
+#tabelaAlunos,
+#tabelaCursos,
+#tabelaTipos {
+    margin-top: 16px;
+}
+
+#tabelaAlunos th:last-child,
+#tabelaAlunos td:last-child,
+#tabelaCursos th:last-child,
+#tabelaCursos td:last-child,
+#tabelaTipos th:last-child,
+#tabelaTipos td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.btn-remover {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #c53030;
+    color: white;
+    cursor: pointer;
+    font-size: 0.78rem;
+}
+
+.btn-remover:hover {
+    background: #9b2c2c;
+}
+
+.btn-toggle-ativo {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #718096;
+    color: white;
+    cursor: pointer;
+    font-size: 0.78rem;
+    margin-right: 6px;
+}
+
+.btn-toggle-ativo:hover {
+    background: #4a5568;
+}
+
+.tag-ativo {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+}
+
+.tag-ativo.sim {
+    background: #2f855a;
+}
+
+.tag-ativo.nao {
+    background: #c53030;
+}

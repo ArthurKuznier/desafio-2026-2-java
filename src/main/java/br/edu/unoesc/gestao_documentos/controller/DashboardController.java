@@ -15,4 +15,9 @@ public class DashboardController {
     public String solicitacoes() {
         return "solicitacoes";
     }
+
+    @GetMapping("/cadastros")
+    public String cadastros() {
+        return "cadastros";
+    }
 }
