@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitacoes - Gestao de Documentos Academicos</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/solicitacoes.css}">
+</head>
+
+<body>
+
+    <section id="loginSection" class="login-wrapper">
+        <form id="formLogin" class="login-card">
+            <h1>Gestao de Documentos Academicos</h1>
+            <p class="subtitulo">Entre com seu usuario para continuar</p>
+
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required autocomplete="current-password">
+
+            <button type="submit">Entrar</button>
+            <p id="loginErro" class="erro"></p>
+        </form>
+    </section>
+
+    <div id="painelSection" class="escondido">
+        <header class="topbar">
+            <h1>Solicitacoes de Documentos</h1>
+            <nav class="nav-links">
+                <a th:href="@{/dashboard}">Dashboard</a>
+                <a th:href="@{/solicitacoes}" class="ativo">Solicitacoes</a>
+            </nav>
+            <div class="token-box">
+                <span id="usuarioLogado"></span>
+                <button id="btnSair">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="painel">
+                <h2>Nova solicitacao</h2>
+                <form id="formNovaSolicitacao" class="form-inline">
+                    <div class="campo">
+                        <label for="selectAluno">Aluno</label>
+                        <select id="selectAluno" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="selectCurso">Curso</label>
+                        <select id="selectCurso" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="selectTipo">Tipo de documento</label>
+                        <select id="selectTipo" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="selectPrioridade">Prioridade</label>
+                        <select id="selectPrioridade" required>
+                            <option value="NORMAL">Normal</option>
+                            <option value="ALTA">Alta</option>
+                            <option value="URGENTE">Urgente</option>
+                        </select>
+                    </div>
+                    <div class="campo campo-botao">
+                        <button type="submit">Criar solicitacao</button>
+                    </div>
+                </form>
+                <p id="criarErro" class="erro"></p>
+                <p id="criarSucesso" class="sucesso"></p>
+            </section>
+
+            <section class="painel">
+                <h2>Solicitacoes cadastradas</h2>
+                <table id="tabelaSolicitacoes">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Aluno</th>
+                            <th>Curso</th>
+                            <th>Tipo</th>
+                            <th>Prioridade</th>
+                            <th>Status</th>
+                            <th>Última atualização</th>
+                            <th>Mudar status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <p id="mensagemErro" class="erro"></p>
+        </main>
+    </div>
+
+    <script th:src="@{/js/solicitacoes.js}"></script>
+</body>
+
+</html>
