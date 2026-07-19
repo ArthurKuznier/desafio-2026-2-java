@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: gestao-documentos-db
+    environment:
+      POSTGRES_DB: gestao_documentos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - gestao-documentos-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: gestao-documentos-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: gestao_documentos
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: MRT9rXiS8msEhMsEv/TKhVon0OZPtKO+HAdxIdy+VWw=
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin123
+    ports:
+      - "8080:8080"
+
+volumes:
+  gestao-documentos-db-data:
