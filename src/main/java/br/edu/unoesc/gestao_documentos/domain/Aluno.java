@@ -29,7 +29,7 @@ public class Aluno {
     private String nome;
 
     @Column(nullable = false)
-    private boolean ativo = true;
+    private Boolean ativo = true;
 
     @JsonIgnore
     @OneToMany(mappedBy = "aluno")

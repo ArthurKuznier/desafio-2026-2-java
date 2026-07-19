@@ -30,5 +30,5 @@ public class Status {
     private Integer responsavel;
 
     @Column(nullable = false)
-    private boolean finalizaSolicitacao;
+    private Boolean finalizaSolicitacao = false;
 }

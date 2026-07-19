@@ -45,6 +45,8 @@ public class Solicitacao {
 
     private LocalDateTime dataEmissao;
 
+    private String ultimaAtualizacaoPor;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)
     private Status status;
