@@ -8,6 +8,7 @@ import br.edu.unoesc.gestao_documentos.repositories.projection.TempoMedioEmissao
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,29 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Integer> {
-
-        @Query("SELECT s FROM Solicitacao s " +
-                        "JOIN FETCH s.aluno a " +
-                        "JOIN FETCH s.curso c " +
-                        "JOIN FETCH s.tipo t " +
-                        "JOIN FETCH s.status st " +
-                        "WHERE (:nomeAluno IS NULL OR LOWER(a.nome) LIKE LOWER(CONCAT('%', :nomeAluno, '%'))) " +
-                        "AND (:nomeCurso IS NULL OR LOWER(c.nome) LIKE LOWER(CONCAT('%', :nomeCurso, '%'))) " +
-                        "AND (:nomeTipoDocumento IS NULL OR LOWER(t.nome) LIKE LOWER(CONCAT('%', :nomeTipoDocumento, '%'))) "
-                        +
-                        "AND (:statusId IS NULL OR st.id = :statusId) " +
-                        "AND (:dataInicio IS NULL OR s.dataSolicitacao >= :dataInicio) " +
-                        "AND (:dataFim IS NULL OR s.dataSolicitacao <= :dataFim)")
-        Page<Solicitacao> buscarComFiltros(
-                        @Param("nomeAluno") String nomeAluno,
-                        @Param("nomeCurso") String nomeCurso,
-                        @Param("nomeTipoDocumento") String nomeTipoDocumento,
-                        @Param("statusId") Integer statusId,
-                        @Param("dataInicio") LocalDateTime dataInicio,
-                        @Param("dataFim") LocalDateTime dataFim,
-                        Pageable pageable);
-
+public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Integer>,
+                JpaSpecificationExecutor<Solicitacao> {
         @Query("SELECT s FROM Solicitacao s " +
                         "JOIN FETCH s.aluno " +
                         "JOIN FETCH s.curso " +
